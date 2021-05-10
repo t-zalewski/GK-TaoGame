@@ -23,6 +23,8 @@ namespace GK_Tao.Players
             this.Color = playerColor;
         }
 
+        public abstract void InitializeGame(IPlayerBoard board, int size, int targetLength);
+
         public abstract int SelectFieldValue(IPlayerBoard board);
     }
 }

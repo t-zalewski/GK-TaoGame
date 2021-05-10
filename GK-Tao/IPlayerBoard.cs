@@ -6,6 +6,7 @@ namespace GK_Tao
     {
         IEnumerable<Field> GetEmptyFields();
         IEnumerable<Field> GetFieldsByColor(Enums.FieldColor color);
+        Field[] GetFieldsSorted();
         bool IsFieldExist(int fieldValue);
     }
 }

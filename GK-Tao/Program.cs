@@ -18,6 +18,7 @@ namespace GK_Tao
             var gameMaster = new GameMaster(selectedOption, size, targetLength);
 
             var result = gameMaster.StartGame();
+            Console.Read();
         }
 
         static int GetSize()
@@ -41,10 +42,10 @@ namespace GK_Tao
             while (true)
             {
                 input = Console.ReadLine();
-                if (int.TryParse(input, out int n) && n > 0)
+                if (int.TryParse(input, out int n) && n > 2)
                     return n;
 
-                Console.WriteLine("Niepoprawna długość ciągu. Oczekiwana liczba większa od 0.");
+                Console.WriteLine("Niepoprawna długość ciągu. Oczekiwana liczba większa od 2.");
             }
         }
 

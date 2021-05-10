@@ -31,12 +31,14 @@ namespace GK_Tao
             this.guiController = new GuiController();
 
             this.Board = new Board(size);
-            this.Players = PlayersFactory.CreatePlayers(gameType);
+            this.Players = PlayersFactory.CreatePlayers(gameType, Strategy.RandomStrategy, Strategy.OffensiveStrategy);
         }
 
         public GameStatus StartGame()
         {
-            this.GameStatus = GameStatus.InProgress;
+            this.Players[0].InitializeGame(this.Board, this.Size, this.TargetLength);
+            this.Players[1].InitializeGame(this.Board, this.Size, this.TargetLength);
+
             this.guiController.DrawBoard(this.Board);
             
             var playerIdTurn = 0;

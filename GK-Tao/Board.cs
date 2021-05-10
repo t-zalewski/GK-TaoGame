@@ -40,6 +40,11 @@ namespace GK_Tao
             return fields.First(f => f.Value == value);
         }
 
+        public Field[] GetFieldsSorted()
+        {
+            return fields.OrderBy(f => f.Value).ToArray();
+        }
+
         public void SetFieldColor(FieldColor color, int fieldValue)
         {
             if (color == FieldColor.White)

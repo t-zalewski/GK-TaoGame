@@ -31,6 +31,12 @@ namespace GK_Tao.Players
             {
                 case Strategy.RandomStrategy:
                     return new RandomBot(color);
+                case Strategy.OffensiveStrategy:
+                    return new StrategyPlayer(color, 0.75, 0.25);
+                case Strategy.DefensiveStratgy:
+                    return new StrategyPlayer(color, 0.25, 0.75);
+                case Strategy.BalancedStrategy:
+                    return new StrategyPlayer(color, 0.5, 0.5);
                 default:
                     return null;
             }

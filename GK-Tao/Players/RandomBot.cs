@@ -19,6 +19,10 @@ namespace GK_Tao.Players
             rng = new Random();
         }
 
+        public override void InitializeGame(IPlayerBoard board, int size, int targetLength)
+        {
+            
+        }
 
         public override int SelectFieldValue(IPlayerBoard board)
         {

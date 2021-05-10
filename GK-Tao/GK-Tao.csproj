@@ -54,6 +54,7 @@
     <Compile Include="GuiController.cs" />
     <Compile Include="IGameMasterBoard.cs" />
     <Compile Include="IPlayerBoard.cs" />
+    <Compile Include="Players\StrategyPlayer.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Players\PlayersFactory.cs" />
     <Compile Include="Players\RandomBot.cs" />

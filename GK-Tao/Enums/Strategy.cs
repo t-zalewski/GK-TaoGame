@@ -9,5 +9,8 @@ namespace GK_Tao.Enums
     public enum Strategy
     {
         RandomStrategy,
+        OffensiveStrategy,
+        DefensiveStratgy,
+        BalancedStrategy
     }
 }
