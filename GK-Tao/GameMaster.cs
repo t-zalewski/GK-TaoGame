@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GK_Tao.Algorithms;
 
 namespace GK_Tao
 {
@@ -12,6 +13,8 @@ namespace GK_Tao
     {
         #region Fields
         private GuiController guiController;
+        private List<List<Field>>[] playerAPPossibilities;
+        private List<Field> winningAP = null;
         #endregion
 
         #region properties
@@ -29,9 +32,18 @@ namespace GK_Tao
             this.Size = size;
             this.TargetLength = targetLength;
             this.guiController = new GuiController();
+            List<List<Field>> allPossibilities = null;
+            do
+            {
+                this.Board = new Board(size);
+                allPossibilities = APFinder.FindAllSequences(Board, TargetLength, Size);
+            } while (allPossibilities.Count == 0);
 
-            this.Board = new Board(size);
-            this.Players = PlayersFactory.CreatePlayers(gameType, Strategy.RandomStrategy, Strategy.OffensiveStrategy);
+            this.Players = PlayersFactory.CreatePlayers(gameType, Strategy.OffensiveStrategy, Strategy.RandomStrategy);
+            this.playerAPPossibilities = new List<List<Field>>[Players.Length];
+            
+            for (int i = 0; i < playerAPPossibilities.Length; i++)
+                playerAPPossibilities[i] = allPossibilities.ToList();
         }
 
         public GameStatus StartGame()
@@ -55,6 +67,7 @@ namespace GK_Tao
                 }
 
                 this.MarkSelectedField(move, currentPlayer);
+                this.UpdatePlayerPossibilities(playerIdTurn, move);
                 this.CheckIfGameEndedAndSetStatus();
 
                 this.guiController.DrawBoard(this.Board);
@@ -84,14 +97,50 @@ namespace GK_Tao
             this.Board.SetFieldColor(player.Color, fieldValue);
         }
 
+        private void UpdatePlayerPossibilities(int currentPlayerId, int moveMade)
+        {
+            int anotherPlayerId = (currentPlayerId + 1) % 2;
+            this.playerAPPossibilities[anotherPlayerId].RemoveAll(ap => ap.Any(f => f.Value == moveMade));
+        }
+
         private void CheckIfGameEndedAndSetStatus()
         {
-            // TODO: Check if players won
-            var emptyFields = this.Board.GetEmptyFields();
-            if (emptyFields.Count() == 0)
+            if (playerAPPossibilities.All(apPoss => apPoss.Count == 0))
             {
                 this.GameStatus = GameStatus.Draw;
+                return;
             }
+
+            for (int id = 0; id < Players.Length; id++)
+                if (CheckIfPlayerWon(id))
+                {
+                    this.GameStatus = Players[id].Color == FieldColor.Blue ? GameStatus.BlueWon : GameStatus.RedWon;
+                    return;
+                }
+        }
+
+        private bool CheckIfPlayerWon(int playerId)
+        {
+            FieldColor playerColor = Players[playerId].Color;
+            IEnumerable<Field> playerFields = Board.GetFieldsByColor(playerColor);
+            foreach (List<Field> playerWinningAP in playerAPPossibilities[playerId])
+            {
+                bool apMatched = true;
+                foreach (Field field in playerWinningAP)
+                    if (!playerFields.Any(f => f.Value == field.Value))
+                    {
+                        apMatched = false;
+                        break;
+                    }
+
+                if (apMatched)
+                {
+                    winningAP = playerWinningAP;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void EndGame()
@@ -102,7 +151,27 @@ namespace GK_Tao
                 return;
             }
 
-            this.guiController.DrawBoardWithInfo(this.Board, $"Gra skończona. Wygrał gracz {(this.GameStatus == GameStatus.BlueWon ? '1' : '2')}");
+            this.guiController.DrawBoardWithInfo(this.Board, 
+                $"Gra skończona. Wygrał gracz {(this.GameStatus == GameStatus.BlueWon ? '1' : '2')}\n" +
+                $"Zwycięski ciąg arytmetyczny {CreateWinningAPString()}");
+        }
+
+        private string CreateWinningAPString()
+        {
+            string apString = "";
+            if (winningAP != null)
+            {
+                if (winningAP[0].Value > winningAP[winningAP.Count - 1].Value)
+                    winningAP.Reverse();
+                
+                foreach (Field field in winningAP)
+                    apString += $"{field.Value}, ";
+
+                int apDiff = winningAP[1].Value - winningAP[0].Value;
+                apString += $"\nróżnica ciągu wynosi {apDiff}.";
+            }
+
+            return apString;
         }
 
     }

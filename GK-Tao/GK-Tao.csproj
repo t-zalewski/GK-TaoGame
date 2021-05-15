@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\APFinder.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardHelper.cs" />
     <Compile Include="Enums\FieldColor.cs" />

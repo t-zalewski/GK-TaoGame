@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GK_Tao.Algorithms;
 
 namespace GK_Tao.Players
 {
@@ -32,7 +33,7 @@ namespace GK_Tao.Players
         {
             this.Size = size;
             this.TargetLength = targetLength;
-            this.allSequences = FindAllSequences(board).ToList();
+            this.allSequences = APFinder.FindAllSequences(board, targetLength, size).ToList();
             this.myAvailableSequences = this.allSequences.ToList();
             this.opponentAvailableSequences = this.allSequences.ToList();
         }
@@ -75,70 +76,6 @@ namespace GK_Tao.Players
             opponentAvailableSequences.RemoveAll(seq => seq.Exists(item => item.Value == chosenValue));
             this.Sleep();
             return chosenValue;
-        }
-
-        private List<List<Field>> FindAllSequences(IPlayerBoard board)
-        {
-            var allSequences = new List<List<Field>>();
-            var fields = board.GetFieldsSorted();
-
-            var sequence = new Stack<Field>();
-            int maxDiff = (fields.Last().Value - fields.First().Value) / (this.TargetLength - 1);
-            bool sequenceWithDiffFound;
-
-            for (int i = 0; i < this.Size; i++)
-            {
-                sequence.Push(fields[i]);
-
-                for (int j = i + 1; j < this.Size; j++)
-                {
-                    int diff = fields[j].Value - fields[i].Value;
-                    sequenceWithDiffFound = false;
-
-                    if (diff > maxDiff)
-                        break; //No need to search further - difference is to big, we won't find AP of required length
-
-                    sequence.Push(fields[j]);
-                    int lastIndex = j;
-
-                    for (int k = j + 1; k < this.Size; k++)
-                    {
-
-                        if (fields[k].Value > fields[lastIndex].Value + diff)
-                        {
-                            break;
-                        }
-                        else if (fields[k].Value < fields[lastIndex].Value + diff)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            //we found the next element of a sequence
-                            sequence.Push(fields[k]);
-                            lastIndex = k;
-
-                            if (sequence.Count == this.TargetLength)
-                            {
-                                allSequences.Add(sequence.ToList());
-                                sequenceWithDiffFound = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    sequence.Clear();
-                    sequence.Push(fields[i]);
-
-                    if (sequenceWithDiffFound)
-                        continue;
-
-                }
-
-                sequence.Clear();
-            }
-
-            return allSequences;
         }
     
         private int ChooseBestStrategyValue(IPlayerBoard board)
