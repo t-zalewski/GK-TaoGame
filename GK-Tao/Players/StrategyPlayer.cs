@@ -20,13 +20,15 @@ namespace GK_Tao.Players
         private List<List<Field>> myAvailableSequences { get; set; }
         private List<List<Field>> opponentAvailableSequences { get; set; }
         private Random random { get; }
+        private bool withComputer;
         #endregion
 
-        public StrategyPlayer(FieldColor playerColor, double offensiveFactor, double defensiveFactor) : base(playerColor)
+        public StrategyPlayer(FieldColor playerColor, double offensiveFactor, double defensiveFactor, bool withComputer = true) : base(playerColor)
         {
             this.OffensiveFactor = offensiveFactor;
             this.DefensiveFactor = defensiveFactor;
             this.random = new Random();
+            this.withComputer = withComputer;
         }
 
         public override void InitializeGame(IPlayerBoard board, int size, int targetLength)
@@ -74,7 +76,8 @@ namespace GK_Tao.Players
             }
             
             opponentAvailableSequences.RemoveAll(seq => seq.Exists(item => item.Value == chosenValue));
-            //this.Sleep();
+            if (!withComputer)
+                this.Sleep();
             return chosenValue;
         }
     

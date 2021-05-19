@@ -19,9 +19,8 @@ namespace GK_Tao
             int[] score = new int[3];
             Parallel.For(0, testIterations, (i) =>
             {
-               GameMaster gm = new GameMaster(GameType.ComputerVsComputer, size, targetLength);
-               gm.Players[0] = PlayersFactory.GetPlayerByStrategy(firstPlayerStrategy, FieldColor.Blue);
-               gm.Players[1] = PlayersFactory.GetPlayerByStrategy(secondPlayerStrategy, FieldColor.Red);
+               GameMaster gm = new GameMaster(GameType.ComputerVsComputer, size, targetLength,
+                   new Strategy[] { firstPlayerStrategy, secondPlayerStrategy }, false);
                GameStatus result = gm.StartGame(false);
 
                lock (score)

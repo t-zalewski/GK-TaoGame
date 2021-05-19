@@ -26,20 +26,20 @@ namespace GK_Tao
         public GameStatus GameStatus { get; private set; }
         #endregion
 
-        public GameMaster(GameType gameType, int size, int targetLength)
+        public GameMaster(GameType gameType, int size, int targetLength, Strategy[] computerStrategies, bool isComputerFirst)
         {
             this.GameType = gameType;
             this.Size = size;
             this.TargetLength = targetLength;
             this.guiController = new GuiController();
-            List<List<Field>> allPossibilities = null;
+            List<List<Field>> allPossibilities;
             do
             {
                 this.Board = new Board(size);
                 allPossibilities = APFinder.FindAllSequences(Board, TargetLength, Size);
             } while (allPossibilities.Count == 0);
 
-            this.Players = PlayersFactory.CreatePlayers(gameType, Strategy.OffensiveStrategy, Strategy.RandomStrategy);
+            this.Players = PlayersFactory.CreatePlayers(gameType, computerStrategies, isComputerFirst);
             this.playerAPPossibilities = new List<List<Field>>[Players.Length];
             
             for (int i = 0; i < playerAPPossibilities.Length; i++)
@@ -151,7 +151,7 @@ namespace GK_Tao
         {
             if (this.GameStatus == GameStatus.Draw)
             {
-                this.guiController.DrawBoardWithInfo(this.Board, "Gra skończona remisem");
+                this.guiController.DrawBoardWithInfo(this.Board, "Gra skończona remisem. Nie pozostał żaden ciąg do ułożenia.");
                 return;
             }
 

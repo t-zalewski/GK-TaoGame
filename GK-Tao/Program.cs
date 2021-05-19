@@ -14,15 +14,75 @@ namespace GK_Tao
             var selectedOption = Program.GetGameType();
             var size = Program.GetSize();
             var targetLength = Program.GetTargetLength();
+            bool isComputerFirst = false;
+            Strategy[] strategies = new Strategy[2];
 
-            if (selectedOption == GameType.Tests)
-                RunTests(size, targetLength);
-            else
+            switch (selectedOption)
             {
-                var gameMaster = new GameMaster(selectedOption, size, targetLength);
+                case GameType.ComputerVsComputer:
+                    strategies[0] = Program.GetComputerStrategy();
+                    strategies[1] = Program.GetComputerStrategy();
+                    RunGame(selectedOption, size, targetLength, strategies, isComputerFirst);
+                    break;
+                case GameType.ComputerVsUser:
+                    strategies[0] = Program.GetComputerStrategy();
+                    isComputerFirst = Program.IsComputerFirstPlayer();
+                    RunGame(selectedOption, size, targetLength, strategies, isComputerFirst);
+                    break;
+                case GameType.Tests:
+                    RunTests(size, targetLength);
+                    break;
+                default:
+                    break;
+            }
+        }
 
-                var result = gameMaster.StartGame();
-                Console.Read();
+        private static void RunGame(GameType selectedOption, int size, int targetLength, Strategy[] strategies, bool isComputerFirst)
+        {
+            var gameMaster = new GameMaster(selectedOption, size, targetLength, strategies, isComputerFirst);
+
+            var result = gameMaster.StartGame();
+            Console.Read();
+        }
+
+        private static bool IsComputerFirstPlayer()
+        {
+            Console.WriteLine("Wskaż gracza rozpoczynającego: K - komputer, U - użytkownik");
+            string input;
+            while (true)
+            {
+                input = Console.ReadLine();
+                switch (input)
+                {
+                    case "K": return true;
+                    case "U": return false;
+                    
+                    default:
+                        Console.WriteLine("Nierozpoznana opcja!");
+                        break;
+                }
+            }
+
+        }
+
+        private static Strategy GetComputerStrategy()
+        {
+            Console.WriteLine("Wprowadź nazwę strategii gracza komputerowego: \nL - losowa, O - ofensywna, D - defensywna, Z - zbalansowana");
+            string input;
+            while (true)
+            {
+                input = Console.ReadLine();
+                switch (input)
+                {
+                    case "L": return Strategy.RandomStrategy;
+                    case "O": return Strategy.OffensiveStrategy;
+                    case "D": return Strategy.DefensiveStratgy;
+                    case "Z": return Strategy.BalancedStrategy;
+
+                    default:
+                        Console.WriteLine("Nierozpoznana opcja!");
+                        break;
+                }
             }
         }
 

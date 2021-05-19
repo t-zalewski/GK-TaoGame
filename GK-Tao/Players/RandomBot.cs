@@ -12,11 +12,13 @@ namespace GK_Tao.Players
     {
         #region Fields
         private Random rng;
+        private bool withComputer;
         #endregion
 
-        public RandomBot(FieldColor playerColor) : base(playerColor)
+        public RandomBot(FieldColor playerColor, bool withComputer = true) : base(playerColor)
         {
             rng = new Random();
+            this.withComputer = withComputer;
         }
 
         public override void InitializeGame(IPlayerBoard board, int size, int targetLength)
@@ -28,7 +30,8 @@ namespace GK_Tao.Players
         {
             var emptyFields = board.GetEmptyFields().ToList();
             var ind = rng.Next(emptyFields.Count);
-            //this.Sleep();
+            if (!withComputer)
+                this.Sleep();
             return emptyFields[ind].Value;
         }
 
