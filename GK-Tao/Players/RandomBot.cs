@@ -28,7 +28,7 @@ namespace GK_Tao.Players
         {
             var emptyFields = board.GetEmptyFields().ToList();
             var ind = rng.Next(emptyFields.Count);
-            this.Sleep();
+            //this.Sleep();
             return emptyFields[ind].Value;
         }
 

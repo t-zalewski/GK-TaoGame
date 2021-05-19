@@ -14,18 +14,27 @@ namespace GK_Tao
         private const int constModifier = 5;
 
         private static Random rng = new Random();
+
+        private static IEnumerable<string> loadedFile = null;
         #endregion
 
         public static IEnumerable<Field> GetFieldsFromFile(int size)
         {
-            var primesText = System.IO.File.ReadAllText(filePath);
-            var fields = primesText.Split("\r\n\t ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .Take(size * constModifier)
-                .OrderBy(p => rng.Next())
-                .Take(size)
-                .Select(p => new Field(){ FieldColor= Enums.FieldColor.White, Value = int.Parse(p)});
+            if (loadedFile == null)
+            {
+                var primesText = System.IO.File.ReadAllText(filePath);
+                loadedFile = primesText.Split("\r\n\t ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
 
-            return fields;
+            lock (loadedFile)
+            {
+                var fields = loadedFile.Take(size * constModifier)
+                    .OrderBy(p => rng.Next())
+                    .Take(size)
+                    .Select(p => new Field() { FieldColor = Enums.FieldColor.White, Value = int.Parse(p) });
+
+                return fields;
+            }
         }
     }
 }

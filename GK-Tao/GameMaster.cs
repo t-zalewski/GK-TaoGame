@@ -46,12 +46,13 @@ namespace GK_Tao
                 playerAPPossibilities[i] = allPossibilities.ToList();
         }
 
-        public GameStatus StartGame()
+        public GameStatus StartGame(bool drawBoard = true)
         {
             this.Players[0].InitializeGame(this.Board, this.Size, this.TargetLength);
             this.Players[1].InitializeGame(this.Board, this.Size, this.TargetLength);
 
-            this.guiController.DrawBoard(this.Board);
+            if (drawBoard)
+                this.guiController.DrawBoard(this.Board);
             
             var playerIdTurn = 0;
 
@@ -62,7 +63,8 @@ namespace GK_Tao
                 var move = currentPlayer.SelectFieldValue(this.Board);
                 if (!this.CheckIfCorrectMove(move))
                 {
-                    this.guiController.DrawBoardWithError(this.Board, $"Niepoprawny ruch! Podano pole: {move}");
+                    if (drawBoard)
+                        this.guiController.DrawBoardWithError(this.Board, $"Niepoprawny ruch! Podano pole: {move}");
                     continue;
                 }
 
@@ -70,11 +72,13 @@ namespace GK_Tao
                 this.UpdatePlayerPossibilities(playerIdTurn, move);
                 this.CheckIfGameEndedAndSetStatus();
 
-                this.guiController.DrawBoard(this.Board);
+                if (drawBoard)
+                    this.guiController.DrawBoard(this.Board);
                 playerIdTurn = (playerIdTurn + 1) % 2;
             }
-
-            this.EndGame();
+            if (drawBoard)
+                this.EndGame();
+            
             return this.GameStatus;
         }
 

@@ -74,7 +74,7 @@ namespace GK_Tao.Players
             }
             
             opponentAvailableSequences.RemoveAll(seq => seq.Exists(item => item.Value == chosenValue));
-            this.Sleep();
+            //this.Sleep();
             return chosenValue;
         }
     

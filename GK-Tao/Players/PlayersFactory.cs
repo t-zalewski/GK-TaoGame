@@ -25,7 +25,7 @@ namespace GK_Tao.Players
             return new Player[] { player1, player2 };
         }
 
-        private static Player GetPlayerByStrategy(Strategy strategy, FieldColor color)
+        public static Player GetPlayerByStrategy(Strategy strategy, FieldColor color)
         {
             switch(strategy)
             {

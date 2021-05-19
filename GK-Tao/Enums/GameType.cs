@@ -9,6 +9,7 @@ namespace GK_Tao.Enums
     public enum GameType
     {
         ComputerVsComputer,
-        ComputerVsUser
+        ComputerVsUser, 
+        Tests
     }
 }
