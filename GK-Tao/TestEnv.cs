@@ -17,34 +17,36 @@ namespace GK_Tao
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             int[] score = new int[3];
-            Parallel.For(0, testIterations, (i) =>
+            double[] possibilities = new double[testIterations];
+            
+            for (int i = 0; i < testIterations; i++)
             {
-               GameMaster gm = new GameMaster(GameType.Tests, size, targetLength,
-                   new Strategy[] { firstPlayerStrategy, secondPlayerStrategy }, false);
-               GameStatus result = gm.StartGame(false);
+                GameMaster gm = new GameMaster(GameType.Tests, size, targetLength,
+                    new Strategy[] { firstPlayerStrategy, secondPlayerStrategy }, false);
+                GameStatus result = gm.StartGame(false);
 
-               lock (score)
-               {
-                   if (result == GameStatus.BlueWon)
-                       score[0]++;
-                   
-                   if (result == GameStatus.RedWon)
-                       score[1]++;
+                possibilities[i] = gm.StartPossibilitiesCount;
+                if (result == GameStatus.BlueWon)
+                    score[0]++;
 
-                   if (result == GameStatus.Draw)
-                       score[2]++;
+                if (result == GameStatus.RedWon)
+                    score[1]++;
 
-                   if (result == GameStatus.InProgress)
-                       throw new Exception("Game not ended");
-               }
-            });
+                if (result == GameStatus.Draw)
+                    score[2]++;
+
+                if (result == GameStatus.InProgress)
+                    throw new Exception("Game not ended");
+            }
             TimeSpan ts = stopWatch.Elapsed;
             // Format and display the TimeSpan value.
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds / 10);
             //Console.WriteLine("RunTime " + elapsedTime);
+            double possibilitiesMean = (double)possibilities.Sum() / (double)testIterations;
 
+            Console.WriteLine($"Possibilities mean: {possibilitiesMean}");
             return score;
         }
     }

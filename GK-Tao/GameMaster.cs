@@ -24,6 +24,8 @@ namespace GK_Tao
         public Board Board { get; }
         public Player[] Players { get; }
         public GameStatus GameStatus { get; private set; }
+
+        public int StartPossibilitiesCount { get; private set; }
         #endregion
 
         public GameMaster(GameType gameType, int size, int targetLength, Strategy[] computerStrategies, bool isComputerFirst)
@@ -38,6 +40,7 @@ namespace GK_Tao
                 this.Board = new Board(size);
                 allPossibilities = APFinder.FindAllSequences(Board, TargetLength, Size);
             } while (allPossibilities.Count == 0);
+            StartPossibilitiesCount = allPossibilities.Count;
 
             this.Players = PlayersFactory.CreatePlayers(gameType, computerStrategies, isComputerFirst);
             this.playerAPPossibilities = new List<List<Field>>[Players.Length];
