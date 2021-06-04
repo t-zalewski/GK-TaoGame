@@ -34,11 +34,10 @@ namespace GK_Tao.Players
                 firstPlayer = isComputerFirst ? GetPlayerByStrategy(computerStrategies[0], FieldColor.Blue, false) : new UserPlayer(FieldColor.Blue);
                 secondPlayer = isComputerFirst ? new UserPlayer(FieldColor.Red) : GetPlayerByStrategy(computerStrategies[0], FieldColor.Red, false);
             }
-
-            if (gameType == GameType.ComputerVsComputer)
+            else
             {
-                firstPlayer = GetPlayerByStrategy(computerStrategies[0], FieldColor.Blue, false);
-                secondPlayer = GetPlayerByStrategy(computerStrategies[1], FieldColor.Red, false);
+                firstPlayer = GetPlayerByStrategy(computerStrategies[0], FieldColor.Blue, gameType == GameType.Tests ? true : false);
+                secondPlayer = GetPlayerByStrategy(computerStrategies[1], FieldColor.Red, gameType == GameType.Tests ? true : false);
             }
 
             return new Player[] { firstPlayer, secondPlayer };
