@@ -11,7 +11,7 @@ namespace GK_Tao
 {
     public static class TestEnv
     {
-        private static readonly int testIterations = 1000;
+        public static int testIterations = 1000;
         public static int[] RunTest(Strategy firstPlayerStrategy, Strategy secondPlayerStrategy, int size, int targetLength)
         {
             Stopwatch stopWatch = new Stopwatch();

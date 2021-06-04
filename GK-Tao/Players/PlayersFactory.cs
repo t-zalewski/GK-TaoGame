@@ -27,7 +27,7 @@ namespace GK_Tao.Players
 
         public static Player[] CreatePlayers(GameType gameType, Strategy[] computerStrategies, bool isComputerFirst)
         {
-            Player firstPlayer = null, secondPlayer = null;
+            Player firstPlayer, secondPlayer;
 
             if (gameType == GameType.ComputerVsUser)
             {

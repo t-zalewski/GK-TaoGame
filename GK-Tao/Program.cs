@@ -30,7 +30,8 @@ namespace GK_Tao
                     RunGame(selectedOption, size, targetLength, strategies, isComputerFirst);
                     break;
                 case GameType.Tests:
-                    RunTests(size, targetLength);
+                    int testsCount = Program.GetTestsCount();
+                    RunTests(size, targetLength, testsCount);
                     break;
                 default:
                     break;
@@ -65,6 +66,20 @@ namespace GK_Tao
 
         }
 
+        private static int GetTestsCount()
+        {
+            Console.WriteLine("Wprowadź liczbę testów do przeprowadzenia:");
+            string input;
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (int.TryParse(input, out int n) && n > 0)
+                    return n;
+
+                Console.WriteLine("Niepoprawny rozmiar zadania. Oczekiwana liczba większa od 0.");
+            }
+
+        }
         private static Strategy GetComputerStrategy()
         {
             Console.WriteLine("Wprowadź nazwę strategii gracza komputerowego: \nL - losowa, O - ofensywna, D - defensywna, Z - zbalansowana");
@@ -143,11 +158,11 @@ namespace GK_Tao
             }
         }
 
-        private static void RunTests(int size, int targetLength)
+        private static void RunTests(int size, int targetLength, int testsCount)
         {
             Console.WriteLine("All statistics are for the first player.");
             //first is always blue
-
+            TestEnv.testIterations = testsCount;
             Console.WriteLine("Random vs. Offensive:");
             int[] score = TestEnv.RunTest(Strategy.RandomStrategy, Strategy.OffensiveStrategy, size, targetLength);
             Console.WriteLine($"Won: {score[0]}, lost: {score[1]}, drawn: {score[2]}");
