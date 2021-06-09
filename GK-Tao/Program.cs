@@ -36,6 +36,9 @@ namespace GK_Tao
                 default:
                     break;
             }
+
+            Console.WriteLine("Wciśnij enter, aby zamknąć okno...");
+            Console.ReadLine();
         }
 
         private static void RunGame(GameType selectedOption, int size, int targetLength, Strategy[] strategies, bool isComputerFirst)
